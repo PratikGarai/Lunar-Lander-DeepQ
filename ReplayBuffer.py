@@ -21,7 +21,7 @@ class ReplayBuffer() :
         self.new_state_memory[index] = state_
         self.action_memory[index] = action
         self.reward_memory[index] = reward
-        self.terminal_memory[index] = 1- int(done)
+        self.terminal_memory[index] = 1-int(done)
         self.mem_cntr += 1
 
     

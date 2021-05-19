@@ -10,10 +10,11 @@ class Agent:
                     epsilon_end=0.01, memsize=1000000, 
                     fname='dqn_model.h5'):
         
-        self.action = [i for i in range(n_actions)]
+        self.action_space = [i for i in range(n_actions)]
         self.gamma = gamma
         self.epsilon = epsilon
         self.eps_min = epsilon_end
+        self.eps_dec = epsilon_dec
         self.batch_size = batch_size
         self.model_file = fname
         self.memory = ReplayBuffer(memsize, input_dims)
@@ -27,7 +28,7 @@ class Agent:
     def choose_action(self, observation):
         if np.random.random() < self.epsilon : 
             # Explore
-            action = np.random.choice(self.action)
+            action = np.random.choice(self.action_space)
         else:
             # Send state (frame of sates) into the neural net
             state = np.array([observation])
@@ -58,7 +59,7 @@ class Agent:
         self.q_eval.train_on_batch(states, q_target)
 
         if self.epsilon > self.eps_min :
-            self.epsilon = self.epsilon-self.dec
+            self.epsilon = self.epsilon-self.eps_dec
         else :
             self.epsilon = self.eps_min
     
