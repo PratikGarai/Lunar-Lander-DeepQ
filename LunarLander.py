@@ -8,7 +8,7 @@ if __name__=="__main__":
     tf.compat.v1.disable_eager_execution()
     env = gym.make('LunarLander-v2')
     lr = 0.001
-    n_games = 500
+    n_games = 100
     agent = Agent(gamma=0.99, epsilon=1.0, lr=lr, 
                     input_dims=env.observation_space.shape,
                     n_actions=env.action_space.n, mem_size=1000000,
@@ -39,6 +39,6 @@ if __name__=="__main__":
         print("-------------------------------------\n\n")
 
 
-    filename = 'learning_rate.png'
+    filename = 'learning_graph.png'
     x = [i+1 for i in range(n_games)]
     plotLearning(x, scores, eps_history, filename)

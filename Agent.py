@@ -4,6 +4,7 @@ import numpy as np
 from tensorflow.keras.models import load_model
 
 class Agent():
+
     def __init__(self, lr, gamma, n_actions, epsilon, batch_size,
                 input_dims, epsilon_dec=1e-3, epsilon_end=0.01,
                 mem_size=1000000, fname='dqn_model.h5'):
@@ -19,40 +20,43 @@ class Agent():
 
 
     def store_transition(self, state, action, reward, new_state, done):
+        # store info in memory
         self.memory.store_transition(state, action, reward, new_state, done)
 
 
     def choose_action(self, observation):
         if np.random.random() < self.epsilon:
+            # Explore
             action = np.random.choice(self.action_space)
         else:
+            # No explore, update state based on Deep model's
+            # analysis of state and return action
             state = np.array([observation])
             actions = self.q_eval.predict(state)
-
             action = np.argmax(actions)
-
         return action
 
+
     def learn(self):
+        # no learning until batch size is reached
         if self.memory.mem_cntr < self.batch_size:
             return
 
+        # fetch data from memory of past episodes
         states, actions, rewards, states_, dones = \
                 self.memory.sample_buffer(self.batch_size)
 
         q_eval = self.q_eval.predict(states)
         q_next = self.q_eval.predict(states_)
 
-
+        # training the model
         q_target = np.copy(q_eval)
         batch_index = np.arange(self.batch_size, dtype=np.int32)
-
         q_target[batch_index, actions] = rewards + \
                         self.gamma * np.max(q_next, axis=1)*dones
-
-
         self.q_eval.train_on_batch(states, q_target)
 
+        # updating the epsilon
         self.epsilon = self.epsilon - self.eps_dec if self.epsilon > \
                 self.eps_min else self.eps_min
 

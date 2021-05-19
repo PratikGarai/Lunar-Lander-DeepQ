@@ -7,6 +7,10 @@ def build_dqn(lr, n_actions, input_dims, fc1_dims, fc2_dims):
         keras.layers.Dense(fc1_dims, activation='relu'),
         keras.layers.Dense(fc2_dims, activation='relu'),
         keras.layers.Dense(n_actions, activation=None)])
-    model.compile(optimizer=Adam(learning_rate=lr), loss='mean_squared_error')
+    
+    model.compile(
+        optimizer=Adam(learning_rate=lr), 
+        loss='mean_squared_error'
+    )
 
     return model
