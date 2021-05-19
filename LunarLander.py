@@ -8,16 +8,12 @@ if __name__=="__main__":
     tf.compat.v1.disable_eager_execution()
     env = gym.make('LunarLander-v2')
     lr = 0.001
-    n_games = 1
+    n_games = 500
     agent = Agent(gamma=0.99, epsilon=1.0, lr=lr, 
                     input_dims=env.observation_space.shape,
-                    n_actions=env.action_space.n, memsize=1000000,
-                    batch_size=64, epsilon_end=0.01)
-    
-    print(env.action_space.n)
-    print(env.observation_space.shape)
-    print("---------------------------\n\n")
-    
+                    n_actions=env.action_space.n, mem_size=1000000,
+                    batch_size=64, epsilon_end=0.10)
+
     scores = []
     eps_history = []
 
@@ -43,6 +39,6 @@ if __name__=="__main__":
         print("-------------------------------------\n\n")
 
 
-    filename = 'lunarlanding_tf2.png'
+    filename = 'learning_rate.png'
     x = [i+1 for i in range(n_games)]
     plotLearning(x, scores, eps_history, filename)
